@@ -1,10 +1,14 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +19,7 @@ namespace Business.Concrete
 {
     public class ProductManager : IProductService
     {
-        
+
         IProductDAL _productDal;
         public ProductManager(IProductDAL productDal)
         {
@@ -23,25 +27,29 @@ namespace Business.Concrete
         }
 
         //
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             //business=>uygunluk durumu
             //validation=>kurallarminşukadar karakter şu şçyle olmalı bu böyle olmalı
             //merkezi bir noktada kurallar vermek için fluetvaledation ile yapacagız.burdaki validasyon işlerinden kurtulacağız.
-            if(product.UnitPrice<=0)
-            {
-                return new ErrorResult("hata");
-            }
-            
-            if(product.ProductName.Length<2)
-            {
-                return new ErrorResult(Messages.ProductNameInValid);
-            }
+            //if(product.UnitPrice<=0)
+            //{
+            //    return new ErrorResult("hata");
+            //}
+
+            //if(product.ProductName.Length<2)
+            //{
+            //    return new ErrorResult(Messages.ProductNameInValid);
+            //}
+
+            //ValidationTool.Validate(new ProductValidator(), product);
+
             _productDal.Add(product);
 
             return new SuccessResult(Messages.ProductAdded);
         }
-        
+
         //
         public IDataResult<List<Product>> GetAll()
         {
@@ -50,33 +58,33 @@ namespace Business.Concrete
             //    return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             //}
 
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductsListed);
         }
-        
+
         //
         public IDataResult<List<Product>> GetAllByCategoryId(int id)
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id));
         }
-        
+
         //
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
-        
+
         //
         public IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max)
         {
-            return new SuccessDataResult<List<Product>> (_productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max));
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max));
         }
-        
+
         //
         public IDataResult<List<ProductDetailDto>> GetProductDetails()
         {
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails());
         }
-        
+
         //
     }
 }

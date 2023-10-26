@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.ValidationRules
-{                                                   //dtolar için de yapılabilir.
+namespace Business.ValidationRules.FluentValidation
+{                                                   //dtolar için de yapılabilir. Göndereceğimiz nesneyi belirtiyoruz.
     public class ProductValidator : AbstractValidator<Product>
     {
         public ProductValidator()
@@ -22,7 +22,7 @@ namespace Business.ValidationRules
 
 
         }
-
+        //deneme method 
         private bool StartWithA(string arg)
         {
             return arg.StartsWith("A");

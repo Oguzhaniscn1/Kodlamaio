@@ -9,7 +9,7 @@ using DataAccess.Concrete.EntityFramework;
 
 
 namespace Business.DependencyResolvers.Autofac
-{                                       //
+{                                      
     public class AutofacBusinessModule:Module
     {
         protected override void Load(ContainerBuilder builder)
@@ -25,7 +25,7 @@ namespace Business.DependencyResolvers.Autofac
                     Selector = new AspectInterceptorSelector()
                 }).SingleInstance();
 
-
+            //kendi kullanmak istediğimiz IoC yapılanmasını programcsde tasarlamak yerine burada tasarlayıp programcs de tanıtıyoruz
 
 
 

@@ -8,36 +8,36 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            ProductTest();
-            //CategoryTest();
-        }
+        //    ProductTest();
+        //    //CategoryTest();
+        //}
 
-        private static void CategoryTest()
-        {
-            CategoryManager categoryManager = new CategoryManager(new EfCategoryDAL());
-            foreach (var cat in categoryManager.GetAll())
-            {
-                Console.WriteLine(cat.CategoryName);
-            }
-        }
+        //private static void CategoryTest()
+        //{
+        //    CategoryManager categoryManager = new CategoryManager(new EfCategoryDAL());
+        //    foreach (var cat in categoryManager.GetAll().Data)
+        //    {
+        //        Console.WriteLine(cat.CategoryName);
+        //    }
+        //}
 
-        private static void ProductTest()
-        {
-            ProductManager productManager = new ProductManager(new EfProductDAL());
+        //private static void ProductTest()
+        //{
+        //    ProductManager productManager = new ProductManager(new EfProductDAL(),new CategoryManager(new EfCategoryDAL ));
 
-            var result = productManager.GetProductDetails();
-            if(result.Success)
-            {
+        //    var result = productManager.GetProductDetails();
+        //    if(result.Success)
+        //    {
 
-                foreach (var product in productManager.GetProductDetails().Data)
-                {
-                    Console.WriteLine(product.ProductName + " / " + product.CategoryName);
-                }
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-            }
+        //        foreach (var product in productManager.GetProductDetails().Data)
+        //        {
+        //            Console.WriteLine(product.ProductName + " / " + product.CategoryName);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine(result.Message);
+        //    }
 
         }
     }

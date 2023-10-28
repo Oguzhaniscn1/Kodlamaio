@@ -3,6 +3,7 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
@@ -21,9 +22,12 @@ namespace Business.Concrete
     {
 
         IProductDAL _productDal;
-        public ProductManager(IProductDAL productDal)
+        ICategoryService _categoryService;
+        public ProductManager(IProductDAL productDal, ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
+
         }
 
         //
@@ -45,9 +49,19 @@ namespace Business.Concrete
 
             //ValidationTool.Validate(new ProductValidator(), product);
 
+            IResult result = BusinessRules.Run(CheckIfProductCountOfCategoryCorrect(product.CategoryId)
+                , CheckIfProductNameExist(product.ProductName)
+                , CheckIfCategoryLimitExceded());
+            if (result != null)
+            {
+                return result;
+            }
             _productDal.Add(product);
-
             return new SuccessResult(Messages.ProductAdded);
+
+
+
+
         }
 
         //
@@ -86,5 +100,48 @@ namespace Business.Concrete
         }
 
         //
+
+        [ValidationAspect(typeof(ProductValidator))]
+        public IResult Update(Product product)
+        {
+
+            _productDal.Add(product);
+            return new SuccessResult(Messages.ProductAdded);
+        }
+
+        //
+
+
+        private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)//parçacık oldupu için entity vermiyorum; verebilirdim.
+        {
+            var result = _productDal.GetAll(p => p.CategoryId == categoryId).Count();
+            if (result >= 10)
+            {
+                return new ErrorResult("bir kategoride 10 taneden fazla ürün olamaz");
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfProductNameExist(string productName)//parçacık oldupu için entity vermiyorum; verebilirdim.
+        {
+            var result = _productDal.GetAll(p => p.ProductName == productName).Any();//isimleri aynı olan product var mı
+            if (result)
+            {
+                return new ErrorResult("bu isimde ürün mevcut");
+            }
+            return new SuccessResult();
+        }
+
+
+        private IResult CheckIfCategoryLimitExceded()
+        {
+            var result = _categoryService.GetAll();//getall komutunu calıstırdı bizim yazdıgımız.
+            if (result.Data.Count>15)//dönen datanın sayısı 15ten büyük ise
+            {
+                return new ErrorResult("kategori sayısı fazla olduğu için ürün eklenemez");
+            }
+            return new SuccessResult();
+        }
+
     }
 }

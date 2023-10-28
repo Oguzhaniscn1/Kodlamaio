@@ -12,7 +12,7 @@ namespace Core.Aspects.Autofac.Validation
         {
             if (!typeof(IValidator).IsAssignableFrom(validatorType))
             {
-                throw new System.Exception("bu bir doğrulama sınıfı değidir.");
+                throw new System.Exception("bu bir doğrulama sınıfı değidir.");//asp içine mesaj dosyasıda oluşturulabilir.
             }
 
             _validatorType = validatorType;

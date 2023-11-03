@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Core.Utilities.IoC;
+using Core.Extensions;
 
 namespace Business.BusinessAspects.Autofac
 {
@@ -34,7 +35,7 @@ namespace Business.BusinessAspects.Autofac
                     return;
                 }
             }
-            throw new Exception("");
+            throw new Exception("yetkin yok");
         }
     }
 }

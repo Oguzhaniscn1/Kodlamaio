@@ -1,4 +1,5 @@
-﻿using Core.Entities.Concrete;
+﻿using Castle.Components.DictionaryAdapter.Xml;
+using Core.Entities.Concrete;
 using Core.Extensions;
 using Core.Utilities.Security.Encryption;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Core.Utilities.Security.JWT
 {

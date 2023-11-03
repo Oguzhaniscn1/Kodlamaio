@@ -34,24 +34,10 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            //business=>uygunluk durumu
-            //validation=>kurallarminşukadar karakter şu şçyle olmalı bu böyle olmalı
-            //merkezi bir noktada kurallar vermek için fluetvaledation ile yapacagız.burdaki validasyon işlerinden kurtulacağız.
-            //if(product.UnitPrice<=0)
-            //{
-            //    return new ErrorResult("hata");
-            //}
-
-            //if(product.ProductName.Length<2)
-            //{
-            //    return new ErrorResult(Messages.ProductNameInValid);
-            //}
-
-            //ValidationTool.Validate(new ProductValidator(), product);
-
             IResult result = BusinessRules.Run(CheckIfProductCountOfCategoryCorrect(product.CategoryId)
                 , CheckIfProductNameExist(product.ProductName)
                 , CheckIfCategoryLimitExceded());
+            
             if (result != null)
             {
                 return result;
@@ -136,7 +122,7 @@ namespace Business.Concrete
         private IResult CheckIfCategoryLimitExceded()
         {
             var result = _categoryService.GetAll();//getall komutunu calıstırdı bizim yazdıgımız.
-            if (result.Data.Count>15)//dönen datanın sayısı 15ten büyük ise
+            if (result.Data.Count > 15)//dönen datanın sayısı 15ten büyük ise
             {
                 return new ErrorResult("kategori sayısı fazla olduğu için ürün eklenemez");
             }
